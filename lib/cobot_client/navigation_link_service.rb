@@ -1,6 +1,6 @@
 # Used to install links into the Cobot navigation of a space.
 class CobotClient::NavigationLinkService
-  include UrlHelper
+  include CobotClient::UrlHelper
 
   # oauth_client - an OAuth2::Client
   # access_token - an access token string (owner must be admin of the space to be used)
