@@ -1,3 +1,5 @@
+require 'virtus'
+
 class CobotClient::NavigationLink
   include Virtus
 
