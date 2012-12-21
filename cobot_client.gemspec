@@ -16,5 +16,6 @@ Gem::Specification.new do |gem|
   gem.version       = CobotClient::VERSION
 
   gem.add_dependency 'activesupport'
+  gem.add_dependency 'virtus'
   gem.add_development_dependency 'rspec'
 end
