@@ -1,0 +1,12 @@
+<script>
+  $(function() {
+    easyXDM.query = <%== xdm_params.to_json %>;
+    window.socket = new easyXDM.Socket({
+      onReady: function() {
+        setTimeout(function() {
+          window.socket.postMessage($('body').outerHeight());
+        }, 100);
+      }
+    });
+  });
+</script>
