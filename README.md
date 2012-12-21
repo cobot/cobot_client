@@ -1,5 +1,7 @@
 # CobotClient
 
+[![Build Status](https://travis-ci.org/cobot/cobot_client.png?branch=master)](https://travis-ci.org/cobot/cobot_client)
+
 A client for the [Cobot](http://cobot.me) [API](http://cobot.me/pages/api) plus helpers.
 
 ## Installation
