@@ -1,12 +1,16 @@
 <script>
-  $(function() {
-    easyXDM.query = <%== xdm_params.to_json %>;
-    window.socket = new easyXDM.Socket({
-      onReady: function() {
-        setTimeout(function() {
-          window.socket.postMessage($('body').outerHeight());
-        }, 100);
-      }
-    });
+  window.Cobot = window.Cobot || {};
+  window.Cobot.iframeResize = function() {
+    if(window.socket) {
+      window.socket.postMessage($('body').outerHeight());
+    }
+  }
+  easyXDM.query = <%== xdm_params.to_json %>;
+  window.socket = new easyXDM.Socket({
+    onReady: function() {
+      setTimeout(function() {
+        window.Cobot.iframeResize();
+      }, 100);
+    }
   });
 </script>

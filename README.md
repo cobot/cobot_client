@@ -48,6 +48,8 @@ Add the following code to your application controller:
 
     include CobotClient::XdmHelper
 
+This will automatically resize Cobot's iframe whenever a new page is loaded. To manually trigger a resize call `window.Cobot.iframeResize()`.
+
 ### Generating URLs to the Cobot API
 
 There is a module `CobotClient::UrlHelper`. After you include it you can call `cobot_url`. Examples:
