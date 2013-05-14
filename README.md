@@ -50,6 +50,10 @@ Add the following code to your application controller:
 
 This will automatically resize Cobot's iframe whenever a new page is loaded. To manually trigger a resize call `window.Cobot.iframeResize()`.
 
+The default script determine's the iframe height by calling `jQuery('body').outerHeight()`. To provide your own height you can either pass it to the `iframeResize` function or you can define a function `window.Cobot.iframeHeight`.
+
+When you display layers in the iframe that are positioned relative to the window you have to take into account how much the user scrolled down in the parent frame. For this purpose the script provides the property `window.Cobot.scrollTop`, which returns the no. of pixels the user has scrolled down.
+
 ### Generating URLs to the Cobot API
 
 There is a module `CobotClient::UrlHelper`. After you include it you can call `cobot_url`. Examples:

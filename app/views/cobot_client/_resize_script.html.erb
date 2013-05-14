@@ -1,16 +1,24 @@
 <script>
   window.Cobot = window.Cobot || {};
-  window.Cobot.iframeResize = function(height) {
-    if(window.socket) {
-      window.socket.postMessage(height || $('body').outerHeight());
+    window.Cobot.iframeResize = function(height) {
+      window.socket.postMessage(height || window.Cobot.iframeHeight());
     }
-  }
-  easyXDM.query = <%== xdm_params.to_json %>;
-  window.socket = new easyXDM.Socket({
-    onReady: function() {
-      setTimeout(function() {
-        window.Cobot.iframeResize();
-      }, 100);
+    window.Cobot.iframeHeight = window.Cobot.iframeHeight || function() {
+      $('body').outerHeight();
     }
-  });
+    window.Cobot.scrollTop = 0;
+    easyXDM.query = <%== xdm_params.to_json %>;
+    window.socket = new easyXDM.Socket({
+      onReady: function() {
+        setTimeout(function() {
+          window.Cobot.iframeResize();
+        }, 100);
+      },
+      onMessage: function(message) {
+        var message = JSON.parse(message);
+        if(message.scrollTop) {
+          window.Cobot.scrollTop = message.scrollTop;
+        }
+      }
+    });
 </script>
