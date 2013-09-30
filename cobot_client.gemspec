@@ -19,6 +19,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'activesupport'
   gem.add_dependency 'virtus'
   gem.add_dependency 'oauth2'
+  gem.add_dependency 'rest-client'
+  gem.add_dependency 'json'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'rake'
 end

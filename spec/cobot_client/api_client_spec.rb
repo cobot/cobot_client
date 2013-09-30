@@ -1,0 +1,68 @@
+require 'spec_helper'
+
+describe CobotClient::ApiClient do
+  let(:api_client) { CobotClient::ApiClient.new('token-123') }
+  let(:default_response) { stub(:default_response, body: '{}') }
+
+  context 'listing resources' do
+    it 'calls rest client' do
+      RestClient.should_receive(:get).with('https://co-up.cobot.me/api/resources',
+        'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.get_resources 'co-up'
+    end
+
+    it 'returns the json' do
+      RestClient.stub(:get) { stub(:response, body: [{id: 'resource-1'}].to_json) }
+
+      resources = api_client.get_resources 'co-up'
+
+      expect(resources).to eql([{id: 'resource-1'}])
+    end
+  end
+
+  context 'creating a booking' do
+    it 'calls rest client' do
+      RestClient.should_receive(:post).with('https://co-up.cobot.me/api/resources/res-1/bookings',
+        {title: 'meeting'},
+        'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.create_booking 'co-up', 'res-1', title: 'meeting'
+    end
+
+    it 'returns the json' do
+      RestClient.stub(:post) { stub(:response, body: {title: 'meeting'}.to_json) }
+
+      booking = api_client.create_booking 'co-up', 'res-1', title: 'meeting'
+
+      expect(booking).to eql({title: 'meeting'})
+    end
+  end
+
+  context 'updating a booking' do
+    it 'calls rest client' do
+      RestClient.should_receive(:put).with('https://co-up.cobot.me/api/bookings/booking-1',
+        {title: 'meeting'},
+        'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.update_booking 'co-up', 'booking-1', title: 'meeting'
+    end
+
+    it 'returns the json' do
+      RestClient.stub(:put) { stub(:response, body: {title: 'meeting'}.to_json) }
+
+      booking = api_client.update_booking 'co-up', 'booking-1', title: 'meeting'
+
+      expect(booking).to eql({title: 'meeting'})
+    end
+  end
+
+  context 'deleting a booking' do
+    it 'calls rest client' do
+      RestClient.should_receive(:delete).with('https://co-up.cobot.me/api/bookings/booking-1',
+        'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.delete_booking 'co-up', 'booking-1'
+    end
+  end
+end

@@ -62,6 +62,12 @@ There is a module `CobotClient::UrlHelper`. After you include it you can call `c
     cobot_url('co-up', '/api/user') # => 'https://co-up.cobot.me/api/user'
     cobot_url('co-up', '/api/user', params: {x: 'y'}) # => 'https://co-up.cobot.me/api/user?x=y'
 
+### Calling the API
+
+    CobotClient::ApiClient.new('<access token>').list_resources('<subdomain>')
+
+For more details see the specs.
+
 ## Contributing
 
 1. Fork it
