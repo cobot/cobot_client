@@ -7,6 +7,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Client for the Cobot API plus helpers}
   gem.summary       = %q{Client for the Cobot API plus helpers}
   gem.homepage      = "http://github.com/cobot/cobot_client"
+  gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
