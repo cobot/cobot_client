@@ -7,6 +7,16 @@ describe CobotClient::UrlHelper, 'cobot_url' do
     end
   end
 
+  after(:each) do
+    CobotClient::UrlHelper.site = 'https://www.cobot.me'
+  end
+
+  it 'lets me change the site' do
+    CobotClient::UrlHelper.site = 'https://www.cobot.com'
+
+    expect(helper.cobot_url).to eql('https://www.cobot.com/')
+  end
+
   it 'returns the default url' do
     expect(helper.cobot_url).to eql('https://www.cobot.me/')
   end
