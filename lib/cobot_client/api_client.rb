@@ -25,8 +25,6 @@ module CobotClient
       delete subdomain, "/bookings/#{id}"
     end
 
-    private
-
     def put(subdomain, path, params)
       JSON.parse RestClient.put(cobot_url(subdomain, "/api#{path}"), params, auth_headers).body,
         symbolize_names: true
