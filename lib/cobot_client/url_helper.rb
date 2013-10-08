@@ -21,7 +21,7 @@ module CobotClient::UrlHelper
     url = URI.parse(CobotClient::UrlHelper.site)
     url.host = url.host.split('.').tap{|parts| parts[0] = subdomain}.join('.')
     url.path = path
-    url.query = URI.encode_www_form(options[:params]) if options[:params]
+    url.query = URI.encode_www_form(options[:params]) if options[:params] && options[:params].any?
 
     url.to_s
   end

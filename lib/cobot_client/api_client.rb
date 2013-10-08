@@ -39,9 +39,9 @@ module CobotClient
         symbolize_names: true
     end
 
-    def get(subdomain, path)
+    def get(subdomain, path, params = {})
       JSON.parse(
-        RestClient.get(cobot_url(subdomain, "/api#{path}"), auth_headers).body,
+        RestClient.get(cobot_url(subdomain, "/api#{path}", params: params), auth_headers).body,
         symbolize_names: true
       )
     end

@@ -65,4 +65,19 @@ describe CobotClient::ApiClient do
       api_client.delete_booking 'co-up', 'booking-1'
     end
   end
+
+  context '#get' do
+    it 'calls rest client' do
+      RestClient.should_receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
+        'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.get 'co-up', '/invoices', {from: '2013-10-6', to: '2013-10-12'}
+    end
+
+    it 'returns the response json' do
+      RestClient.stub(:get) { stub(:response, body: [{number: 1}].to_json) }
+
+      expect(api_client.get('co-up', '/invoices')).to eql([{number: 1}])
+    end
+  end
 end
