@@ -10,7 +10,7 @@ module CobotClient
     end
 
     def xdm_params
-      session.inject({}) do |hash, element|
+      session.to_hash.reduce({}) do |hash, element|
         if element.first.match(/xdm\_/)
           hash[element.first] = element.last
         end
