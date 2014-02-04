@@ -1,7 +1,9 @@
 <script>
   window.Cobot = window.Cobot || {};
     window.Cobot.iframeResize = function(height) {
-      window.socket.postMessage(height || window.Cobot.iframeHeight());
+      if(window.top !== window) {
+        window.socket.postMessage(height || window.Cobot.iframeHeight());
+      }
     }
     window.Cobot.iframeHeight = window.Cobot.iframeHeight || function() {
       $('body').outerHeight();
