@@ -1,7 +1,7 @@
 require 'virtus'
 
 class CobotClient::NavigationLink
-  include Virtus
+  include Virtus.model
 
   attribute :section, String
   attribute :label, String

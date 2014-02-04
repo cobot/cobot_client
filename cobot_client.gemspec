@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = CobotClient::VERSION
 
-  gem.add_dependency 'virtus'
+  gem.add_dependency 'virtus', '~>1.0.0'
   gem.add_dependency 'oauth2'
   gem.add_dependency 'rest-client'
   gem.add_dependency 'json'
