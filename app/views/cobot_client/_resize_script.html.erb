@@ -1,26 +1,26 @@
 <script>
   window.Cobot = window.Cobot || {};
-    window.Cobot.iframeResize = function(height) {
-      if(window.top !== window) {
-        window.socket.postMessage(height || window.Cobot.iframeHeight());
+  window.Cobot.iframeResize = function(height) {
+    if(window.top !== window) {
+      window.socket.postMessage(height || window.Cobot.iframeHeight());
+    }
+  }
+  window.Cobot.iframeHeight = window.Cobot.iframeHeight || function() {
+    $('body').outerHeight();
+  }
+  window.Cobot.scrollTop = 0;
+  easyXDM.query = <%== xdm_params.to_json %>;
+  window.socket = new easyXDM.Socket({
+    onReady: function() {
+      $(window).load(function() {
+        window.Cobot.iframeResize();
+      });
+    },
+    onMessage: function(message) {
+      var message = JSON.parse(message);
+      if(message.scrollTop) {
+        window.Cobot.scrollTop = message.scrollTop;
       }
     }
-    window.Cobot.iframeHeight = window.Cobot.iframeHeight || function() {
-      $('body').outerHeight();
-    }
-    window.Cobot.scrollTop = 0;
-    easyXDM.query = <%== xdm_params.to_json %>;
-    window.socket = new easyXDM.Socket({
-      onReady: function() {
-        setTimeout(function() {
-          window.Cobot.iframeResize();
-        }, 100);
-      },
-      onMessage: function(message) {
-        var message = JSON.parse(message);
-        if(message.scrollTop) {
-          window.Cobot.scrollTop = message.scrollTop;
-        }
-      }
-    });
+  });
 </script>
