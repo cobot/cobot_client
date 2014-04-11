@@ -4,23 +4,25 @@
     if(window.top !== window) {
       window.socket.postMessage(height || window.Cobot.iframeHeight());
     }
-  }
+  };
   window.Cobot.iframeHeight = window.Cobot.iframeHeight || function() {
     return $('body').outerHeight();
-  }
+  };
   window.Cobot.scrollTop = 0;
-  easyXDM.query = <%== xdm_params.to_json %>;
-  $(window).load(function() {
-    window.socket = new easyXDM.Socket({
-      onReady: function() {
-        window.Cobot.iframeResize();
-      },
-      onMessage: function(message) {
-        var message = JSON.parse(message);
-        if(message.scrollTop) {
-          window.Cobot.scrollTop = message.scrollTop;
+  if(window.top !== window) {
+    easyXDM.query = <%== xdm_params.to_json %>;
+    $(window).load(function() {
+      window.socket = new easyXDM.Socket({
+        onReady: function() {
+          window.Cobot.iframeResize();
+        },
+        onMessage: function(message) {
+          message = JSON.parse(message);
+          if(message.scrollTop) {
+            window.Cobot.scrollTop = message.scrollTop;
+          }
         }
-      }
+      });
     });
-  });
+  }
 </script>
