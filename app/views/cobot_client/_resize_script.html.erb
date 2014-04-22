@@ -1,7 +1,7 @@
 <script>
   window.Cobot = window.Cobot || {};
   window.Cobot.iframeResize = function(height) {
-    if(window.top !== window) {
+    if(window.top != window) {
       window.socket.postMessage(height || window.Cobot.iframeHeight());
     }
   };
@@ -9,7 +9,7 @@
     return $('body').outerHeight();
   };
   window.Cobot.scrollTop = 0;
-  if(window.top !== window) {
+  if(window.top != window) {
     easyXDM.query = <%== xdm_params.to_json %>;
     $(window).load(function() {
       window.socket = new easyXDM.Socket({
