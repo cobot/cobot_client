@@ -1,7 +1,7 @@
 <script>
   window.Cobot = window.Cobot || {};
   window.Cobot.iframeResize = function(height) {
-    if(window.top != window) {
+    if(window.top != window && window.socket) {
       window.socket.postMessage(height || window.Cobot.iframeHeight());
     }
   };
