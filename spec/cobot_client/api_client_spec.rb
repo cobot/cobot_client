@@ -7,7 +7,7 @@ describe CobotClient::ApiClient do
   context 'listing resources' do
     it 'calls rest client' do
       RestClient.should_receive(:get).with('https://co-up.cobot.me/api/resources',
-        'Authorization' => 'Bearer token-123') { default_response }
+        hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
       api_client.get_resources 'co-up'
     end
@@ -25,7 +25,7 @@ describe CobotClient::ApiClient do
     it 'calls rest client' do
       RestClient.should_receive(:post).with('https://co-up.cobot.me/api/resources/res-1/bookings',
         {title: 'meeting'},
-        'Authorization' => 'Bearer token-123') { default_response }
+        hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
       api_client.create_booking 'co-up', 'res-1', title: 'meeting'
     end
@@ -43,7 +43,7 @@ describe CobotClient::ApiClient do
     it 'calls rest client' do
       RestClient.should_receive(:put).with('https://co-up.cobot.me/api/bookings/booking-1',
         {title: 'meeting'},
-        'Authorization' => 'Bearer token-123') { default_response }
+        hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
       api_client.update_booking 'co-up', 'booking-1', title: 'meeting'
     end
@@ -60,7 +60,7 @@ describe CobotClient::ApiClient do
   context 'deleting a booking' do
     it 'calls rest client' do
       RestClient.should_receive(:delete).with('https://co-up.cobot.me/api/bookings/booking-1',
-        'Authorization' => 'Bearer token-123') { default_response }
+        hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
       api_client.delete_booking 'co-up', 'booking-1'
     end
@@ -69,9 +69,18 @@ describe CobotClient::ApiClient do
   context '#get' do
     it 'calls rest client' do
       RestClient.should_receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
-        'Authorization' => 'Bearer token-123') { default_response }
+        hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
       api_client.get 'co-up', '/invoices', {from: '2013-10-6', to: '2013-10-12'}
+    end
+
+    it 'sends a user agent header' do
+      CobotClient::ApiClient.user_agent = 'test agent'
+
+      RestClient.should_receive(:get).with(anything,
+        hash_including('User-Agent' => 'test agent')) { default_response }
+
+      api_client.get 'co-up', '/invoices'
     end
 
     it 'returns the response json' do

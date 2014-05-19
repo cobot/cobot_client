@@ -5,6 +5,10 @@ module CobotClient
   class ApiClient
     include UrlHelper
 
+    class << self
+      attr_accessor :user_agent
+    end
+
     def initialize(access_token)
       @access_token = access_token
     end
@@ -26,28 +30,31 @@ module CobotClient
     end
 
     def put(subdomain, path, params)
-      JSON.parse RestClient.put(cobot_url(subdomain, "/api#{path}"), params, auth_headers).body,
+      JSON.parse RestClient.put(cobot_url(subdomain, "/api#{path}"), params, headers).body,
         symbolize_names: true
     end
 
     def delete(subdomain, path)
-      RestClient.delete(cobot_url(subdomain, "/api#{path}"), auth_headers)
+      RestClient.delete(cobot_url(subdomain, "/api#{path}"), headers)
     end
 
     def post(subdomain, path, params)
-      JSON.parse RestClient.post(cobot_url(subdomain, "/api#{path}"), params, auth_headers).body,
+      JSON.parse RestClient.post(cobot_url(subdomain, "/api#{path}"), params, headers).body,
         symbolize_names: true
     end
 
     def get(subdomain, path, params = {})
       JSON.parse(
-        RestClient.get(cobot_url(subdomain, "/api#{path}", params: params), auth_headers).body,
+        RestClient.get(cobot_url(subdomain, "/api#{path}", params: params), headers).body,
         symbolize_names: true
       )
     end
 
-    def auth_headers
-      {'Authorization' => "Bearer #{@access_token}"}
+    def headers
+      {
+        'Authorization' => "Bearer #{@access_token}",
+        'User-Agent' => self.class.user_agent || "Cobot Client #{CobotClient::VERSION}"
+      }
     end
   end
 end
