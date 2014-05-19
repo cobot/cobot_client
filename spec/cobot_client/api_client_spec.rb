@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CobotClient::ApiClient do
   let(:api_client) { CobotClient::ApiClient.new('token-123') }
-  let(:default_response) { stub(:default_response, body: '{}') }
+  let(:default_response) { double(:default_response, body: '{}') }
 
   context 'listing resources' do
     it 'calls rest client' do
@@ -13,7 +13,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the json' do
-      RestClient.stub(:get) { stub(:response, body: [{id: 'resource-1'}].to_json) }
+      RestClient.stub(:get) { double(:response, body: [{id: 'resource-1'}].to_json) }
 
       resources = api_client.get_resources 'co-up'
 
@@ -31,7 +31,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the json' do
-      RestClient.stub(:post) { stub(:response, body: {title: 'meeting'}.to_json) }
+      RestClient.stub(:post) { double(:response, body: {title: 'meeting'}.to_json) }
 
       booking = api_client.create_booking 'co-up', 'res-1', title: 'meeting'
 
@@ -49,7 +49,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the json' do
-      RestClient.stub(:put) { stub(:response, body: {title: 'meeting'}.to_json) }
+      RestClient.stub(:put) { double(:response, body: {title: 'meeting'}.to_json) }
 
       booking = api_client.update_booking 'co-up', 'booking-1', title: 'meeting'
 
@@ -84,7 +84,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the response json' do
-      RestClient.stub(:get) { stub(:response, body: [{number: 1}].to_json) }
+      RestClient.stub(:get) { double(:response, body: [{number: 1}].to_json) }
 
       expect(api_client.get('co-up', '/invoices')).to eql([{number: 1}])
     end
