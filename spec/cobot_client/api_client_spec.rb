@@ -4,6 +4,10 @@ describe CobotClient::ApiClient do
   let(:api_client) { CobotClient::ApiClient.new('token-123') }
   let(:default_response) { double(:default_response, body: '{}') }
 
+  before(:each) do
+    CobotClient::ApiClient.user_agent = 'test agent'
+  end
+
   context 'listing resources' do
     it 'calls rest client' do
       RestClient.should_receive(:get).with('https://co-up.cobot.me/api/resources',
@@ -23,8 +27,9 @@ describe CobotClient::ApiClient do
 
   context 'creating a booking' do
     it 'calls rest client' do
-      RestClient.should_receive(:post).with('https://co-up.cobot.me/api/resources/res-1/bookings',
-        {title: 'meeting'},
+      RestClient.should_receive(:post).with(
+        'https://co-up.cobot.me/api/resources/res-1/bookings',
+        {title: 'meeting'}.to_json,
         hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
       api_client.create_booking 'co-up', 'res-1', title: 'meeting'
@@ -42,7 +47,7 @@ describe CobotClient::ApiClient do
   context 'updating a booking' do
     it 'calls rest client' do
       RestClient.should_receive(:put).with('https://co-up.cobot.me/api/bookings/booking-1',
-        {title: 'meeting'},
+        {title: 'meeting'}.to_json,
         hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
       api_client.update_booking 'co-up', 'booking-1', title: 'meeting'
@@ -66,27 +71,66 @@ describe CobotClient::ApiClient do
     end
   end
 
+  context '#put' do
+    it 'calls rest client' do
+      RestClient.should_receive(:put).with(
+        'https://co-up.cobot.me/api/invoices',
+        {id: '1'}.to_json,
+        'Content-Type' => 'application/json',
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.put 'co-up', '/invoices', {id: '1'}
+    end
+
+    it 'returns the response json' do
+      RestClient.stub(:put) { double(:response, body: [{number: 1}].to_json) }
+
+      expect(api_client.put('co-up', '/invoices', {})).to eql([{number: 1}])
+    end
+  end
+
+  context '#post' do
+    it 'calls rest client' do
+      RestClient.should_receive(:post).with(
+        'https://co-up.cobot.me/api/invoices',
+        {id: '1'}.to_json,
+        'Content-Type' => 'application/json',
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.post 'co-up', '/invoices', {id: '1'}
+    end
+
+    it 'returns the response json' do
+      RestClient.stub(:post) { double(:response, body: [{number: 1}].to_json) }
+
+      expect(api_client.post('co-up', '/invoices', {})).to eql([{number: 1}])
+    end
+  end
+
   context '#get' do
     it 'calls rest client' do
       RestClient.should_receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
-        hash_including('Authorization' => 'Bearer token-123')) { default_response }
+        'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
 
       api_client.get 'co-up', '/invoices', {from: '2013-10-6', to: '2013-10-12'}
-    end
-
-    it 'sends a user agent header' do
-      CobotClient::ApiClient.user_agent = 'test agent'
-
-      RestClient.should_receive(:get).with(anything,
-        hash_including('User-Agent' => 'test agent')) { default_response }
-
-      api_client.get 'co-up', '/invoices'
     end
 
     it 'returns the response json' do
       RestClient.stub(:get) { double(:response, body: [{number: 1}].to_json) }
 
       expect(api_client.get('co-up', '/invoices')).to eql([{number: 1}])
+    end
+  end
+
+  context '#delete' do
+    it 'calls rest client' do
+      RestClient.should_receive(:delete).with(
+        'https://co-up.cobot.me/api/invoices/1',
+        'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.delete 'co-up', '/invoices/1'
     end
   end
 end

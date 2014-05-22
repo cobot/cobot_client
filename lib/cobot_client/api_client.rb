@@ -29,8 +29,11 @@ module CobotClient
       delete subdomain, "/bookings/#{id}"
     end
 
-    def put(subdomain, path, params)
-      JSON.parse RestClient.put(cobot_url(subdomain, "/api#{path}"), params, headers).body,
+    def put(subdomain, path, body)
+      JSON.parse RestClient.put(
+          cobot_url(subdomain, "/api#{path}"),
+          body.to_json,
+          headers.merge(content_type_header)).body,
         symbolize_names: true
     end
 
@@ -38,16 +41,25 @@ module CobotClient
       RestClient.delete(cobot_url(subdomain, "/api#{path}"), headers)
     end
 
-    def post(subdomain, path, params)
-      JSON.parse RestClient.post(cobot_url(subdomain, "/api#{path}"), params, headers).body,
+    def post(subdomain, path, body)
+      JSON.parse RestClient.post(
+          cobot_url(subdomain, "/api#{path}"),
+          body.to_json,
+          headers.merge(content_type_header)).body,
         symbolize_names: true
     end
 
     def get(subdomain, path, params = {})
       JSON.parse(
-        RestClient.get(cobot_url(subdomain, "/api#{path}", params: params), headers).body,
+        RestClient.get(
+          cobot_url(subdomain, "/api#{path}", params: params),
+          headers).body,
         symbolize_names: true
       )
+    end
+
+    def content_type_header
+      {'Content-Type' => 'application/json'}
     end
 
     def headers
