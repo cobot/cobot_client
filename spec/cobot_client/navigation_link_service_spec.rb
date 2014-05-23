@@ -1,23 +1,17 @@
 require 'spec_helper'
 
 describe CobotClient::NavigationLinkService, '#install_links' do
-  let(:service) { CobotClient::NavigationLinkService.new(oauth_client, 'token-1', 'co-up') }
-  let(:oauth_client) { double(:oauth_client) }
-
-  before(:each) do
-    @token = double(:token).as_null_object
-    OAuth2::AccessToken.stub(new: @token)
-  end
+  let(:service) { CobotClient::NavigationLinkService.new(api_client, 'co-up') }
+  let(:api_client) { double(:api_client) }
 
   context 'when there are links already' do
     before(:each) do
-      @token.stub(:get).with('https://co-up.cobot.me/api/navigation_links') do double(:response, parsed: [
-        {label: 'test link'}])
-      end
+      api_client.stub(:get).with(
+        'co-up', '/navigation_links') { [{label: 'test link'}] }
     end
 
     it 'installs no links' do
-      @token.should_not_receive(:post)
+      api_client.should_not_receive(:post)
 
       service.install_links [double(:link)]
     end
@@ -29,21 +23,21 @@ describe CobotClient::NavigationLinkService, '#install_links' do
 
   context 'when there are no links installed' do
     let(:link) { double(:link, section: 'admin/manage', label: 'test link', iframe_url: '/test') }
+
     before(:each) do
-      @token.stub(:get).with('https://co-up.cobot.me/api/navigation_links') { double(:response, parsed: []) }
+      api_client.stub(:get).with('co-up', '/navigation_links') { [] }
     end
 
     it 'installs the links' do
-      @token.should_receive(:post).with('https://co-up.cobot.me/api/navigation_links', body: {
+      api_client.should_receive(:post).with('co-up', '/navigation_links', {
         section: 'admin/manage', label: 'test link', iframe_url: '/test'
-      }) { double(:response, status: 201, parsed: {}) }
+      }) { {} }
 
       service.install_links [link]
     end
 
     it 'returns the links created' do
-      response = double(:response, status: 201, parsed: {label: 'test link'})
-      @token.stub(:post) { response }
+      api_client.stub(:post) { {label: 'test link'} }
 
       expect(service.install_links([link]).map(&:label)).to eql(['test link'])
     end

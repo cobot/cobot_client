@@ -3,13 +3,10 @@ require 'oauth2'
 module CobotClient
   # Used to install links into the Cobot navigation of a space.
   class NavigationLinkService
-    include UrlHelper
-
-    # oauth_client - an OAuth2::Client
+    # oauth_client - an CobotClient::ApiClient
     # access_token - an access token string (owner must be admin of the space to be used)
-    def initialize(oauth_client, access_token, space_sudomain)
-      @oauth_client = oauth_client
-      @access_token = access_token
+    def initialize(api_client, space_sudomain)
+      @api_client = api_client
       @subdomain = space_sudomain
     end
 
@@ -30,31 +27,19 @@ module CobotClient
     private
 
     def get_links
-      token.get(cobot_url(@subdomain, "/api/navigation_links")).parsed.map do |attributes|
+      @api_client.get(@subdomain, "/navigation_links").map do |attributes|
         NavigationLink.new attributes
       end
     end
 
     def create_link(link)
-      response = token.post(cobot_url(@subdomain, '/api/navigation_links'), body: {
+      response = @api_client.post(@subdomain, '/navigation_links',
         section: link.section,
         label: link.label,
         iframe_url: link.iframe_url
-      })
+      )
 
-      unless successful?(response)
-        raise "Error installing link: #{response.body}"
-      end
-
-      NavigationLink.new response.parsed
-    end
-
-    def token
-      @token ||= OAuth2::AccessToken.new(@oauth_client, @access_token)
-    end
-
-    def successful?(response)
-      [200, 201].include?(response.status)
+      NavigationLink.new response
     end
   end
 end

@@ -24,8 +24,8 @@ Or install it yourself as:
 
 You can install links to your app into the navigation on Cobot. When users click the link an iframe pointing to the given `iframe_url` will be shown.
 
-    client = OAuth2::Client.new <...>
-    CobotClient::NavigationLinkService.new(client, '<access token>', 'co-up').install_links [
+    client = CobotClient::ApiClient.new <access token>
+    CobotClient::NavigationLinkService.new(client, 'co-up').install_links [
       CobotClient::NavigationLink.new(section: 'admin/manage', label: 'My App', iframe_url: 'http://example.com')]
 
 ### Setting up automatic iframe resizing
@@ -64,9 +64,15 @@ There is a module `CobotClient::UrlHelper`. After you include it you can call `c
 
 ### Calling the API
 
-    CobotClient::ApiClient.new('<access token>').list_resources('<subdomain>')
+At the moment there are only a few high-level methods. For more details see the specs.
 
-For more details see the specs.
+    client = CobotClient::ApiClient.new('<access token>')
+    client.list_resources('<subdomain>')
+
+For everything else you can use the low-level get/post/put/delete metods:
+
+    client.get 'www', '/user'
+    client.post 'my-subdomain', '/users', {"email": "joe@doe.com"}
 
 ## Contributing
 
