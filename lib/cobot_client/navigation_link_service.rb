@@ -3,7 +3,7 @@ require 'oauth2'
 module CobotClient
   # Used to install links into the Cobot navigation of a space.
   class NavigationLinkService
-    # oauth_client - an CobotClient::ApiClient
+    # api_client - an CobotClient::ApiClient
     # access_token - an access token string (owner must be admin of the space to be used)
     def initialize(api_client, space_sudomain)
       @api_client = api_client

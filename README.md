@@ -74,6 +74,10 @@ For everything else you can use the low-level get/post/put/delete metods:
     client.get 'www', '/user'
     client.post 'my-subdomain', '/users', {"email": "joe@doe.com"}
 
+You can also pass a URL instead of subdomain/path:
+
+    client.get 'https://www/cobot.me/user'
+
 ## Contributing
 
 1. Fork it

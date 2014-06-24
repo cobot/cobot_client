@@ -83,6 +83,17 @@ describe CobotClient::ApiClient do
       api_client.put 'co-up', '/invoices', {id: '1'}
     end
 
+    it 'accepts a url' do
+      RestClient.should_receive(:put).with(
+        'https://co-up.cobot.me/api/invoices',
+        {id: '1'}.to_json,
+        'Content-Type' => 'application/json',
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.put 'https://co-up.cobot.me/api/invoices', {id: '1'}
+    end
+
     it 'returns the response json' do
       RestClient.stub(:put) { double(:response, body: [{number: 1}].to_json) }
 
@@ -102,6 +113,17 @@ describe CobotClient::ApiClient do
       api_client.post 'co-up', '/invoices', {id: '1'}
     end
 
+    it 'accepts a url' do
+      RestClient.should_receive(:post).with(
+        'https://co-up.cobot.me/api/invoices',
+        {id: '1'}.to_json,
+        'Content-Type' => 'application/json',
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.post 'https://co-up.cobot.me/api/invoices', {id: '1'}
+    end
+
     it 'returns the response json' do
       RestClient.stub(:post) { double(:response, body: [{number: 1}].to_json) }
 
@@ -115,6 +137,13 @@ describe CobotClient::ApiClient do
         'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
 
       api_client.get 'co-up', '/invoices', {from: '2013-10-6', to: '2013-10-12'}
+    end
+
+    it 'accepts a url' do
+      RestClient.should_receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
+        'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.get 'https://co-up.cobot.me/api/invoices', {from: '2013-10-6', to: '2013-10-12'}
     end
 
     it 'returns the response json' do
@@ -131,6 +160,14 @@ describe CobotClient::ApiClient do
         'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
 
       api_client.delete 'co-up', '/invoices/1'
+    end
+
+    it 'accepts a url' do
+      RestClient.should_receive(:delete).with(
+        'https://co-up.cobot.me/api/invoices/1',
+        'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.delete 'https://co-up.cobot.me/api/invoices/1'
     end
   end
 end
