@@ -32,11 +32,11 @@ module CobotClient
     # args: either a full URL or subdomain, path, plus a body as hash
     def put(*args)
       url, subdomain, path, body = parse_args *args
-      JSON.parse RestClient.put(
-          build_url(url || subdomain, path),
-          body.to_json,
-          headers.merge(content_type_header)).body,
-        symbolize_names: true
+      response = RestClient.put(
+        build_url(url || subdomain, path),
+        body.to_json,
+        headers.merge(content_type_header))
+      JSON.parse response.body, symbolize_names: true unless response.code == 204
     end
 
     # args: either a full URL or subdomain, path
@@ -48,11 +48,11 @@ module CobotClient
     # args: either a full URL or subdomain, path, plus a body as hash
     def post(*args)
       url, subdomain, path, body = parse_args *args
-      JSON.parse RestClient.post(
+      response = RestClient.post(
           build_url(url || subdomain, path),
           body.to_json,
-          headers.merge(content_type_header)).body,
-        symbolize_names: true
+          headers.merge(content_type_header))
+      JSON.parse response.body, symbolize_names: true unless response.code == 204
     end
 
     # args: either a full URL or subdomain, path, plus an optional params hash

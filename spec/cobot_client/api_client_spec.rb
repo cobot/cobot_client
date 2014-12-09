@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CobotClient::ApiClient do
   let(:api_client) { CobotClient::ApiClient.new('token-123') }
-  let(:default_response) { double(:default_response, body: '{}') }
+  let(:default_response) { double(:default_response, code: 200, body: '{}') }
 
   before(:each) do
     CobotClient::ApiClient.user_agent = 'test agent'
@@ -36,7 +36,8 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the json' do
-      allow(RestClient).to receive(:post) { double(:response, body: {title: 'meeting'}.to_json) }
+      allow(RestClient).to receive(:post) { double(:response,
+        code: 201, body: {title: 'meeting'}.to_json) }
 
       booking = api_client.create_booking 'co-up', 'res-1', title: 'meeting'
 
@@ -54,7 +55,8 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the json' do
-      allow(RestClient).to receive(:put) { double(:response, body: {title: 'meeting'}.to_json) }
+      allow(RestClient).to receive(:put) { double(:response, code: 200,
+        body: {title: 'meeting'}.to_json) }
 
       booking = api_client.update_booking 'co-up', 'booking-1', title: 'meeting'
 
@@ -95,9 +97,15 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the response json' do
-      allow(RestClient).to receive(:put) { double(:response, body: [{number: 1}].to_json) }
+      allow(RestClient).to receive(:put) { double(:response, code: 200, body: [{number: 1}].to_json) }
 
       expect(api_client.put('co-up', '/invoices', {})).to eql([{number: 1}])
+    end
+
+    it 'returns nil when the status code is 204' do
+      allow(RestClient).to receive(:put) { double(:response, body: '', code: 204) }
+
+      expect(api_client.put('co-up', '/invoices', {})).to be_nil
     end
   end
 
@@ -125,9 +133,17 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the response json' do
-      allow(RestClient).to receive(:post) { double(:response, body: [{number: 1}].to_json) }
+      allow(RestClient).to receive(:post) { double(:response,
+        code: 201, body: [{number: 1}].to_json) }
 
       expect(api_client.post('co-up', '/invoices', {})).to eql([{number: 1}])
+    end
+
+    it 'returns nil when the status code is 204' do
+      allow(RestClient).to receive(:post) { double(:response, code: 204,
+        body: '') }
+
+      expect(api_client.post('co-up', '/invoices', {})).to be_nil
     end
   end
 
