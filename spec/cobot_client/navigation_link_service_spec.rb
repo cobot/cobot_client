@@ -6,12 +6,12 @@ describe CobotClient::NavigationLinkService, '#install_links' do
 
   context 'when there are links already' do
     before(:each) do
-      api_client.stub(:get).with(
+      allow(api_client).to receive(:get).with(
         'co-up', '/navigation_links') { [{label: 'test link'}] }
     end
 
     it 'installs no links' do
-      api_client.should_not_receive(:post)
+      expect(api_client).to_not receive(:post)
 
       service.install_links [double(:link)]
     end
@@ -25,11 +25,11 @@ describe CobotClient::NavigationLinkService, '#install_links' do
     let(:link) { double(:link, section: 'admin/manage', label: 'test link', iframe_url: '/test') }
 
     before(:each) do
-      api_client.stub(:get).with('co-up', '/navigation_links') { [] }
+      allow(api_client).to receive(:get).with('co-up', '/navigation_links') { [] }
     end
 
     it 'installs the links' do
-      api_client.should_receive(:post).with('co-up', '/navigation_links', {
+      expect(api_client).to receive(:post).with('co-up', '/navigation_links', {
         section: 'admin/manage', label: 'test link', iframe_url: '/test'
       }) { {} }
 
@@ -37,7 +37,7 @@ describe CobotClient::NavigationLinkService, '#install_links' do
     end
 
     it 'returns the links created' do
-      api_client.stub(:post) { {label: 'test link'} }
+      allow(api_client).to receive(:post) { {label: 'test link'} }
 
       expect(service.install_links([link]).map(&:label)).to eql(['test link'])
     end

@@ -17,9 +17,9 @@ Gem::Specification.new do |gem|
   gem.version       = CobotClient::VERSION
 
   gem.add_dependency 'virtus', '~>1.0.0'
-  gem.add_dependency 'oauth2'
-  gem.add_dependency 'rest-client'
-  gem.add_dependency 'json'
-  gem.add_development_dependency 'rspec'
+  gem.add_dependency 'oauth2', '~>1.0.0'
+  gem.add_dependency 'rest-client', '~>1.7.0'
+  gem.add_dependency 'json', '~>1.8.0'
+  gem.add_development_dependency 'rspec', '~>3.0.0'
   gem.add_development_dependency 'rake'
 end

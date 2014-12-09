@@ -10,14 +10,14 @@ describe CobotClient::ApiClient do
 
   context 'listing resources' do
     it 'calls rest client' do
-      RestClient.should_receive(:get).with('https://co-up.cobot.me/api/resources',
+      expect(RestClient).to receive(:get).with('https://co-up.cobot.me/api/resources',
         hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
       api_client.get_resources 'co-up'
     end
 
     it 'returns the json' do
-      RestClient.stub(:get) { double(:response, body: [{id: 'resource-1'}].to_json) }
+      allow(RestClient).to receive(:get) { double(:response, body: [{id: 'resource-1'}].to_json) }
 
       resources = api_client.get_resources 'co-up'
 
@@ -27,7 +27,7 @@ describe CobotClient::ApiClient do
 
   context 'creating a booking' do
     it 'calls rest client' do
-      RestClient.should_receive(:post).with(
+      expect(RestClient).to receive(:post).with(
         'https://co-up.cobot.me/api/resources/res-1/bookings',
         {title: 'meeting'}.to_json,
         hash_including('Authorization' => 'Bearer token-123')) { default_response }
@@ -36,7 +36,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the json' do
-      RestClient.stub(:post) { double(:response, body: {title: 'meeting'}.to_json) }
+      allow(RestClient).to receive(:post) { double(:response, body: {title: 'meeting'}.to_json) }
 
       booking = api_client.create_booking 'co-up', 'res-1', title: 'meeting'
 
@@ -46,7 +46,7 @@ describe CobotClient::ApiClient do
 
   context 'updating a booking' do
     it 'calls rest client' do
-      RestClient.should_receive(:put).with('https://co-up.cobot.me/api/bookings/booking-1',
+      expect(RestClient).to receive(:put).with('https://co-up.cobot.me/api/bookings/booking-1',
         {title: 'meeting'}.to_json,
         hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
@@ -54,7 +54,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the json' do
-      RestClient.stub(:put) { double(:response, body: {title: 'meeting'}.to_json) }
+      allow(RestClient).to receive(:put) { double(:response, body: {title: 'meeting'}.to_json) }
 
       booking = api_client.update_booking 'co-up', 'booking-1', title: 'meeting'
 
@@ -64,7 +64,7 @@ describe CobotClient::ApiClient do
 
   context 'deleting a booking' do
     it 'calls rest client' do
-      RestClient.should_receive(:delete).with('https://co-up.cobot.me/api/bookings/booking-1',
+      expect(RestClient).to receive(:delete).with('https://co-up.cobot.me/api/bookings/booking-1',
         hash_including('Authorization' => 'Bearer token-123')) { default_response }
 
       api_client.delete_booking 'co-up', 'booking-1'
@@ -73,7 +73,7 @@ describe CobotClient::ApiClient do
 
   context '#put' do
     it 'calls rest client' do
-      RestClient.should_receive(:put).with(
+      expect(RestClient).to receive(:put).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
         'Content-Type' => 'application/json',
@@ -84,7 +84,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'accepts a url' do
-      RestClient.should_receive(:put).with(
+      expect(RestClient).to receive(:put).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
         'Content-Type' => 'application/json',
@@ -95,7 +95,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the response json' do
-      RestClient.stub(:put) { double(:response, body: [{number: 1}].to_json) }
+      allow(RestClient).to receive(:put) { double(:response, body: [{number: 1}].to_json) }
 
       expect(api_client.put('co-up', '/invoices', {})).to eql([{number: 1}])
     end
@@ -103,7 +103,7 @@ describe CobotClient::ApiClient do
 
   context '#post' do
     it 'calls rest client' do
-      RestClient.should_receive(:post).with(
+      expect(RestClient).to receive(:post).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
         'Content-Type' => 'application/json',
@@ -114,7 +114,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'accepts a url' do
-      RestClient.should_receive(:post).with(
+      expect(RestClient).to receive(:post).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
         'Content-Type' => 'application/json',
@@ -125,7 +125,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'returns the response json' do
-      RestClient.stub(:post) { double(:response, body: [{number: 1}].to_json) }
+      allow(RestClient).to receive(:post) { double(:response, body: [{number: 1}].to_json) }
 
       expect(api_client.post('co-up', '/invoices', {})).to eql([{number: 1}])
     end
@@ -133,21 +133,21 @@ describe CobotClient::ApiClient do
 
   context '#get' do
     it 'calls rest client' do
-      RestClient.should_receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
+      expect(RestClient).to receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
         'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
 
       api_client.get 'co-up', '/invoices', {from: '2013-10-6', to: '2013-10-12'}
     end
 
     it 'accepts a url' do
-      RestClient.should_receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
+      expect(RestClient).to receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
         'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
 
       api_client.get 'https://co-up.cobot.me/api/invoices', {from: '2013-10-6', to: '2013-10-12'}
     end
 
     it 'returns the response json' do
-      RestClient.stub(:get) { double(:response, body: [{number: 1}].to_json) }
+      allow(RestClient).to receive(:get) { double(:response, body: [{number: 1}].to_json) }
 
       expect(api_client.get('co-up', '/invoices')).to eql([{number: 1}])
     end
@@ -155,7 +155,7 @@ describe CobotClient::ApiClient do
 
   context '#delete' do
     it 'calls rest client' do
-      RestClient.should_receive(:delete).with(
+      expect(RestClient).to receive(:delete).with(
         'https://co-up.cobot.me/api/invoices/1',
         'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
 
@@ -163,7 +163,7 @@ describe CobotClient::ApiClient do
     end
 
     it 'accepts a url' do
-      RestClient.should_receive(:delete).with(
+      expect(RestClient).to receive(:delete).with(
         'https://co-up.cobot.me/api/invoices/1',
         'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
 
