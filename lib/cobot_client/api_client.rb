@@ -31,42 +31,54 @@ module CobotClient
 
     # args: either a full URL or subdomain, path, plus a body as hash
     def put(*args)
-      url, subdomain, path, body = parse_args *args
-      response = RestClient.put(
-        build_url(url || subdomain, path),
-        body.to_json,
-        headers.merge(content_type_header))
-      JSON.parse response.body, symbolize_names: true unless response.code == 204
+      url, subdomain, path, body = parse_args(*args)
+      rewrap_errors do
+        response = RestClient.put(
+          build_url(url || subdomain, path),
+          body.to_json,
+          headers.merge(content_type_header))
+        JSON.parse response.body, symbolize_names: true unless response.code == 204
+      end
     end
 
     # args: either a full URL or subdomain, path
     def delete(*args)
-      url, subdomain, path, _ = parse_args *args
-      RestClient.delete(build_url(url || subdomain, path), headers)
+      url, subdomain, path, _ = parse_args(*args)
+      rewrap_errors do
+        RestClient.delete(build_url(url || subdomain, path), headers)
+      end
     end
 
     # args: either a full URL or subdomain, path, plus a body as hash
     def post(*args)
-      url, subdomain, path, body = parse_args *args
-      response = RestClient.post(
-          build_url(url || subdomain, path),
-          body.to_json,
-          headers.merge(content_type_header))
-      JSON.parse response.body, symbolize_names: true unless response.code == 204
+      url, subdomain, path, body = parse_args(*args)
+      rewrap_errors do
+        response = RestClient.post(
+            build_url(url || subdomain, path),
+            body.to_json,
+            headers.merge(content_type_header))
+        JSON.parse response.body, symbolize_names: true unless response.code == 204
+      end
     end
 
     # args: either a full URL or subdomain, path, plus an optional params hash
     def get(*args)
-      url, subdomain, path, params = parse_args *args
+      url, subdomain, path, params = parse_args(*args)
       JSON.parse(
-        RestClient.get(
-          build_url(url || subdomain, path, params),
-          headers).body,
-        symbolize_names: true
-      )
+        rewrap_errors do
+          RestClient.get(
+            build_url(url || subdomain, path, params),
+            headers).body
+        end, symbolize_names: true)
     end
 
     private
+
+    def rewrap_errors
+      yield
+      rescue RestClient::Exception => e
+        raise CobotClient::Exceptions::EXCEPTIONS_MAP[e.class].new(e.response)
+    end
 
     def parse_args(*args)
       if args.last.is_a?(Hash)

@@ -1,5 +1,6 @@
 require "cobot_client/version"
 require 'cobot_client/engine' if defined?(Rails)
+require 'cobot_client/exceptions'
 
 module CobotClient
   autoload :ApiClient, 'cobot_client/api_client'

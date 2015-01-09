@@ -167,6 +167,28 @@ describe CobotClient::ApiClient do
 
       expect(api_client.get('co-up', '/invoices')).to eql([{number: 1}])
     end
+
+    it 'converts a rest-client error into a cobot error' do
+      allow(RestClient).to receive(:get).and_raise(RestClient::ResourceNotFound)
+
+      expect do
+        api_client.get('co-up', '/invoices')
+      end.to raise_error(CobotClient::ResourceNotFound)
+    end
+
+    it 'includes the response, http code and http body in the exception' do
+      response = double(:response, code: 404, body: 'boom')
+      error = RestClient::ResourceNotFound.new(response)
+      allow(RestClient).to receive(:get).and_raise(error)
+
+      begin
+        api_client.get('co-up', '/invoices')
+      rescue CobotClient::ResourceNotFound => e
+        expect(e.response).to eql(response)
+        expect(e.http_code).to eql(404)
+        expect(e.http_body).to eql('boom')
+      end
+    end
   end
 
   context '#delete' do
