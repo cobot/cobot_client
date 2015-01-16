@@ -6,6 +6,7 @@ describe CobotClient::ApiClient do
 
   before(:each) do
     CobotClient::ApiClient.user_agent = 'test agent'
+    CobotClient::ApiClient.retry_time = 0
   end
 
   context 'listing resources' do
@@ -106,6 +107,20 @@ describe CobotClient::ApiClient do
       allow(RestClient).to receive(:put) { double(:response, body: '', code: 204) }
 
       expect(api_client.put('co-up', '/invoices', {})).to be_nil
+    end
+
+    it 'retries a 502 error' do
+      @times = 0
+      allow(RestClient).to receive(:put) do
+        if @times < 3
+          @times += 1
+          fail RestClient::BadGateway
+        else
+          double(code: 200, body: {success: true}.to_json)
+        end
+      end
+
+      expect(api_client.put('co-up', '/invoices', {})).to eql(success: true)
     end
   end
 
