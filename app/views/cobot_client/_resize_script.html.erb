@@ -6,12 +6,12 @@
     }
   };
   window.Cobot.iframeHeight = window.Cobot.iframeHeight || function() {
-    return $('body').outerHeight();
+    return document.body.offsetHeight;
   };
   window.Cobot.scrollTop = 0;
   if(window.top != window) {
     easyXDM.query = <%== xdm_params.to_json %>;
-    $(window).load(function() {
+    window.addEventListener('load', function() {
       window.socket = new easyXDM.Socket({
         onReady: function() {
           window.Cobot.iframeResize();
