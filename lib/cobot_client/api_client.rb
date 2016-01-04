@@ -75,7 +75,7 @@ module CobotClient
     def rewrap_errors
       retries = 0
       yield
-    rescue RestClient::BadGateway => e
+    rescue RestClient::BadGateway, SocketError => e
       if retries < 3
         sleep self.class.retry_time
         retries += 1
