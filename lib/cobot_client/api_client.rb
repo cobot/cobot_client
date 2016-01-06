@@ -72,19 +72,25 @@ module CobotClient
       end
     end
 
-    def rewrap_errors
-      retries = 0
-      yield
-    rescue RestClient::BadGateway, SocketError => e
-      if retries < 3
-        sleep self.class.retry_time
-        retries += 1
-        retry
-      else
-        raise e
-      end
+    def rewrap_errors(&block)
+      retry_errors(&block)
     rescue RestClient::Exception => e
       fail CobotClient::Exceptions::EXCEPTIONS_MAP[e.class].new(e.response)
+    end
+
+    def retry_errors
+      retries = 0
+      begin
+        yield
+      rescue RestClient::BadGateway, SocketError, RestClient::RequestTimeout => e
+        if retries < 3
+          sleep self.class.retry_time
+          retries += 1
+          retry
+        else
+          raise e
+        end
+      end
     end
 
     def parse_args(*args)

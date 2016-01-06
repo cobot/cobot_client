@@ -191,6 +191,30 @@ describe CobotClient::ApiClient do
       end.to raise_error(CobotClient::ResourceNotFound)
     end
 
+    it 'retries a RestClient::RequestTimeout' do
+      count = 0
+      allow(RestClient).to receive(:get) do
+        if count == 0
+          count += 1
+          fail RestClient::RequestTimeout
+        else
+          double(:response, body: '{}')
+        end
+      end
+
+      expect(RestClient).to receive(:get).exactly(2).times
+
+      api_client.get('co-up', '/invoices')
+    end
+
+    it 'converts a RestClient::RequestTimeout into a CobotClient::RequestTimeout' do
+      allow(RestClient).to receive(:get).and_raise(RestClient::RequestTimeout)
+
+      expect do
+        api_client.get('co-up', '/invoices')
+      end.to raise_error(CobotClient::RequestTimeout)
+    end
+
     it 'includes the response, http code and http body in the exception' do
       response = double(:response, code: 404, body: 'boom')
       error = RestClient::ResourceNotFound.new(response)
