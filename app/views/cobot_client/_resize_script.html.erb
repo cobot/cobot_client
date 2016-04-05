@@ -7,7 +7,10 @@
   };
 
   window.Cobot.iframeHeight = window.Cobot.iframeHeight || function() {
-    return document.body.offsetHeight;
+    var height = document.body.offsetHeight;
+    var style = getComputedStyle(document.body);
+    height += parseInt(style.marginTop) + parseInt(style.marginBottom);
+    return height;
   };
 
   if(window.top != window) {
