@@ -34,19 +34,9 @@ When you install your app on Cobot you have to add the following to make sure th
 
 This only works for Ruby on Rails >= 3.2. If you are using anything else please take a look at the files involved and set it up manually.
 
-Add jQuery to your app.
-
 Add this lines to your layout, before the closing `</body>` tag:
 
     <%= render 'cobot_client/resize_script' %>
-
-Add this to your application.js:
-
-    //= require cobot_client/easyxdm
-
-Add the following code to your application controller:
-
-    include CobotClient::XdmHelper
 
 This will automatically resize Cobot's iframe whenever a new page is loaded. To manually trigger a resize call `window.Cobot.iframeResize()`.
 

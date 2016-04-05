@@ -1,28 +1,30 @@
 <script>
   window.Cobot = window.Cobot || {};
   window.Cobot.iframeResize = function(height) {
-    if(window.top != window && window.socket) {
-      window.socket.postMessage(height || window.Cobot.iframeHeight());
+    if(window.top != window) {
+      window.parent.postMessage(JSON.stringify({frameHeight: height || window.Cobot.iframeHeight()}), '*');
     }
   };
+
   window.Cobot.iframeHeight = window.Cobot.iframeHeight || function() {
     return document.body.offsetHeight;
   };
-  window.Cobot.scrollTop = 0;
+
   if(window.top != window) {
-    easyXDM.query = <%== xdm_params.to_json %>;
     window.addEventListener('load', function() {
-      window.socket = new easyXDM.Socket({
-        onReady: function() {
-          window.Cobot.iframeResize();
-        },
-        onMessage: function(message) {
-          message = JSON.parse(message);
-          if(message.scrollTop) {
-            window.Cobot.scrollTop = message.scrollTop;
-          }
-        }
-      });
+      window.Cobot.iframeResize();
     });
   }
+
+  window.Cobot.scrollTop = 0;
+  window.addEventListener('message', function(message) {
+    try {
+      var data = JSON.parse(message.data);
+      if(data.scrollTop) {
+        window.Cobot.scrollTop = data.scrollTop;
+      }
+    } catch(e) {
+      // invalid json, ignore
+    }
+  }, false);
 </script>
