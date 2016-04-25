@@ -124,6 +124,56 @@ describe CobotClient::ApiClient do
     end
   end
 
+  context '#patch' do
+    it 'calls rest client' do
+      expect(RestClient).to receive(:patch).with(
+        'https://co-up.cobot.me/api/invoices',
+        {id: '1'}.to_json,
+        'Content-Type' => 'application/json',
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.patch 'co-up', '/invoices', {id: '1'}
+    end
+
+    it 'accepts a url' do
+      expect(RestClient).to receive(:patch).with(
+        'https://co-up.cobot.me/api/invoices',
+        {id: '1'}.to_json,
+        'Content-Type' => 'application/json',
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.patch 'https://co-up.cobot.me/api/invoices', {id: '1'}
+    end
+
+    it 'returns the response json' do
+      allow(RestClient).to receive(:patch) { double(:response, code: 200, body: [{number: 1}].to_json) }
+
+      expect(api_client.patch('co-up', '/invoices', {})).to eql([{number: 1}])
+    end
+
+    it 'returns nil when the status code is 204' do
+      allow(RestClient).to receive(:patch) { double(:response, body: '', code: 204) }
+
+      expect(api_client.patch('co-up', '/invoices', {})).to be_nil
+    end
+
+    it 'retries a 502 error' do
+      @times = 0
+      allow(RestClient).to receive(:patch) do
+        if @times < 3
+          @times += 1
+          fail RestClient::BadGateway
+        else
+          double(code: 200, body: {success: true}.to_json)
+        end
+      end
+
+      expect(api_client.patch('co-up', '/invoices', {})).to eql(success: true)
+    end
+  end
+
   context '#post' do
     it 'calls rest client' do
       expect(RestClient).to receive(:post).with(
