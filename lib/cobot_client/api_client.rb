@@ -40,6 +40,10 @@ module CobotClient
       request :put, *args
     end
 
+    def patch(*args)
+      request :patch, *args
+    end
+
     # args: either a full URL or subdomain, path, plus an optional params hash
     def get(*args)
       url, subdomain, path, params = parse_args(*args)
