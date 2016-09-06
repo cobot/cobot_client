@@ -86,7 +86,7 @@ module CobotClient
       retries = 0
       begin
         yield
-      rescue RestClient::BadGateway, SocketError, RestClient::RequestTimeout => e
+      rescue RestClient::BadGateway, SocketError, RestClient::RequestTimeout, CobotClient::InternalServerError => e
         if retries < 3
           sleep self.class.retry_time
           retries += 1
