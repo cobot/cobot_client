@@ -98,7 +98,7 @@ module CobotClient
     end
 
     def parse_args(*args)
-      if args.last.is_a?(Hash)
+      if args.size == 3 || (args.size == 2 && args[0].match(%r{https?://}))
         params = args.pop
       else
         params = {}

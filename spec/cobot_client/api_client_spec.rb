@@ -86,6 +86,17 @@ describe CobotClient::ApiClient do
       api_client.put 'co-up', '/invoices', {id: '1'}
     end
 
+    it 'passes an array as body' do
+      expect(RestClient).to receive(:put).with(
+        'https://co-up.cobot.me/api/invoices',
+        [{id: '1'}].to_json,
+        'Content-Type' => 'application/json',
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123') { default_response }
+
+      api_client.put 'co-up', '/invoices', [{id: '1'}]
+    end
+
     it 'accepts a url' do
       expect(RestClient).to receive(:put).with(
         'https://co-up.cobot.me/api/invoices',
