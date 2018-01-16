@@ -245,11 +245,11 @@ describe CobotClient::ApiClient do
     end
 
     it 'converts a rest-client error into a cobot error' do
-      allow(RestClient).to receive(:get).and_raise(RestClient::ResourceNotFound)
+      allow(RestClient).to receive(:get).and_raise(RestClient::NotFound)
 
       expect do
         api_client.get('co-up', '/invoices')
-      end.to raise_error(CobotClient::ResourceNotFound)
+      end.to raise_error(CobotClient::NotFound)
     end
 
     it 'retries a RestClient::RequestTimeout' do
@@ -278,12 +278,12 @@ describe CobotClient::ApiClient do
 
     it 'includes the response, http code and http body in the exception' do
       response = double(:response, code: 404, body: 'boom')
-      error = RestClient::ResourceNotFound.new(response)
+      error = RestClient::NotFound.new(response)
       allow(RestClient).to receive(:get).and_raise(error)
 
       begin
         api_client.get('co-up', '/invoices')
-      rescue CobotClient::ResourceNotFound => e
+      rescue CobotClient::NotFound => e
         expect(e.response).to eql(response)
         expect(e.http_code).to eql(404)
         expect(e.http_body).to eql('boom')
