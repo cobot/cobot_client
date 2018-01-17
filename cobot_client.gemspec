@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'virtus', '~>1.0'
   gem.add_dependency 'oauth2', '~>1.0'
-  gem.add_dependency 'rest-client'
+  gem.add_dependency 'rest-client', '~>2.0.1'
   gem.add_dependency 'json', '~>2.0'
   gem.add_development_dependency 'rspec', '~>3.0'
   gem.add_development_dependency 'rake', '~>10.0'
