@@ -36,7 +36,8 @@ module CobotClient
       response = @api_client.post(@subdomain, '/navigation_links',
         section: link.section,
         label: link.label,
-        iframe_url: link.iframe_url
+        iframe_url: link.iframe_url,
+        user_editable: link.user_editable
       )
 
       NavigationLink.new response

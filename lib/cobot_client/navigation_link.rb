@@ -7,4 +7,5 @@ class CobotClient::NavigationLink
   attribute :label, String
   attribute :iframe_url, String
   attribute :user_url, String
+  attribute :user_editable, Boolean, default: true
 end

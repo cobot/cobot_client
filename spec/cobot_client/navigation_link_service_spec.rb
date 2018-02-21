@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe CobotClient::NavigationLinkService, '#install_links' do
   let(:service) { CobotClient::NavigationLinkService.new(api_client, 'co-up') }
-  let(:api_client) { double(:api_client) }
+  let(:api_client) { instance_double(CobotClient::ApiClient) }
 
   context 'when there are links already' do
     before(:each) do
-      allow(api_client).to receive(:get).with(
-        'co-up', '/navigation_links') { [{label: 'test link'}] }
+      allow(api_client).to receive(:get)
+        .with('co-up', '/navigation_links') { [{label: 'test link'}] }
     end
 
     it 'installs no links' do
@@ -22,16 +22,23 @@ describe CobotClient::NavigationLinkService, '#install_links' do
   end
 
   context 'when there are no links installed' do
-    let(:link) { double(:link, section: 'admin/manage', label: 'test link', iframe_url: '/test') }
+    let(:link) do
+      instance_double(CobotClient::NavigationLink,
+        section: 'admin/manage', label: 'test link', iframe_url: '/test',
+        user_editable: true)
+    end
 
     before(:each) do
       allow(api_client).to receive(:get).with('co-up', '/navigation_links') { [] }
     end
 
     it 'installs the links' do
-      expect(api_client).to receive(:post).with('co-up', '/navigation_links', {
-        section: 'admin/manage', label: 'test link', iframe_url: '/test'
-      }) { {} }
+      expect(api_client).to receive(:post)
+        .with('co-up', '/navigation_links',
+          section: 'admin/manage',
+          label: 'test link',
+          iframe_url: '/test',
+          user_editable: true) { {} }
 
       service.install_links [link]
     end
