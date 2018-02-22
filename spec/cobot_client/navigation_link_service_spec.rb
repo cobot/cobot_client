@@ -5,19 +5,34 @@ describe CobotClient::NavigationLinkService, '#install_links' do
   let(:api_client) { instance_double(CobotClient::ApiClient) }
 
   context 'when there are links already' do
+    let(:existing_link) do
+      instance_double(CobotClient::NavigationLink, label: 'existing link',
+        section: 'admin/setup', iframe_url: 'http://example.com/1').as_null_object
+    end
+    let(:new_link) do
+      instance_double(CobotClient::NavigationLink, label: 'new link',
+        section: 'admin/setup', iframe_url: 'http://example.com/2').as_null_object
+    end
+
     before(:each) do
       allow(api_client).to receive(:get)
-        .with('co-up', '/navigation_links') { [{label: 'test link'}] }
+        .with('co-up', '/navigation_links')
+        .and_return([{label: 'existing link',
+          section: 'admin/setup', iframe_url: 'http://example.com/1'}])
     end
 
-    it 'installs no links' do
-      expect(api_client).to_not receive(:post)
+    it 'installs the missing links' do
+      expect(api_client).to receive(:post)
+        .with('co-up', '/navigation_links', hash_including(label: 'new link',
+          section: 'admin/setup', iframe_url: 'http://example.com/2')) { {} }
 
-      service.install_links [double(:link)]
+      service.install_links [existing_link, new_link]
     end
 
-    it 'returns the links' do
-      expect(service.install_links([double(:link)]).map(&:label)).to eql(['test link'])
+    it 'returns all the links' do
+      allow(api_client).to receive(:post) { {label: 'new link'} }
+
+      expect(service.install_links([existing_link, new_link]).map(&:label)).to eql(['existing link', 'new link'])
     end
   end
 
