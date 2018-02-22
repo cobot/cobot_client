@@ -1,3 +1,6 @@
+# 4.0.0
+
+*   changed navigation link service to add missing links and return all if there are links already (before it would do nothing if there were any links already)
 
 # 3.1.0
 
