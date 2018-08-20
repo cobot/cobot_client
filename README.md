@@ -24,9 +24,11 @@ Or install it yourself as:
 
 You can install links to your app into the navigation on Cobot. When users click the link an iframe pointing to the given `iframe_url` will be shown.
 
-    client = CobotClient::ApiClient.new <access token>
-    CobotClient::NavigationLinkService.new(client, 'co-up').install_links [
-      CobotClient::NavigationLink.new(section: 'admin/manage', label: 'My App', iframe_url: 'http://example.com')]
+```ruby
+client = CobotClient::ApiClient.new '<access token>'
+CobotClient::NavigationLinkService.new(client, 'co-up').install_links [
+  CobotClient::NavigationLink.new(section: 'admin/manage', label: 'My App', iframe_url: 'http://example.com')]
+```
 
 ### Setting up automatic iframe resizing
 
@@ -48,25 +50,61 @@ When you display layers in the iframe that are positioned relative to the window
 
 There is a module `CobotClient::UrlHelper`. After you include it you can call `cobot_url`. Examples:
 
-    cobot_url('co-up') # => 'https://co-up.cobot.me/'
-    cobot_url('co-up', '/api/user') # => 'https://co-up.cobot.me/api/user'
-    cobot_url('co-up', '/api/user', params: {x: 'y'}) # => 'https://co-up.cobot.me/api/user?x=y'
+```ruby
+cobot_url('co-up') # => 'https://co-up.cobot.me/'
+cobot_url('co-up', '/api/user') # => 'https://co-up.cobot.me/api/user'
+cobot_url('co-up', '/api/user', params: {x: 'y'}) # => 'https://co-up.cobot.me/api/user?x=y'
+```
 
 ### Calling the API
 
 At the moment there are only a few high-level methods. For more details see the specs.
 
-    client = CobotClient::ApiClient.new('<access token>')
-    client.list_resources('<subdomain>')
+```ruby
+client = CobotClient::ApiClient.new('<access token>')
+client.list_resources('<subdomain>')
+```
 
 For everything else you can use the low-level get/post/put/delete metods:
 
-    client.get 'www', '/user'
-    client.post 'my-subdomain', '/users', {"email": "joe@doe.com"}
+```ruby
+client.get 'www', '/user'
+client.post 'my-subdomain', '/users', {"email": "joe@doe.com"}
+```
 
 You can also pass a URL instead of subdomain/path:
 
-    client.get 'https://www/cobot.me/user'
+```ruby
+client.get 'https://www/cobot.me/user'
+```
+
+### Error handling
+
+In case of Cobot returning a 4xx or 5xx status code, the `ApiClient` throws an exception that is a subclass of `CobotClient::Exception`.
+
+The most common exceptions encountered are `CobotClient::NotFound` (404), `CobotClient::Forbidden` (403), `CobotClient::UnprocesseableEntity` (422) and `CobotClient::TooManyRequests` (429).
+
+To access the error message contained in the response, rescue the exception and `http_body` on it:
+
+```ruby
+begin
+  client = CobotClient::ApiClient.new('<access token>')
+  client.get('www', '/user')
+rescue CobotClient::Exception => e
+  puts JSON.parse(e.http_body)
+end
+```
+
+To access response headers, for example the `Retry-After` header of a rate-limited request:
+
+```ruby
+begin
+  client = CobotClient::ApiClient.new('<access token>')
+  client.get('www', '/user')
+rescue CobotClient::TooManyRequests => e
+  puts e.response.headers[:retry_after].to_i
+end
+```
 
 ## Contributing
 
