@@ -5,8 +5,7 @@ module CobotClient
     EXCEPTIONS_MAP = {}
   end
 
-  class Exception < RestClient::Exception
-  end
+  Exception = RestClient::Exception
 
   RestClient::STATUSES.each_pair do |code, message|
     superclass = RestClient::Exceptions::EXCEPTIONS_MAP.fetch code
