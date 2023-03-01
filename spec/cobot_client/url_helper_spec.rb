@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-describe CobotClient::UrlHelper, 'cobot_url' do
+describe CobotClient::UrlHelper do
   let(:helper) do
     Object.new.tap do |o|
-      o.extend CobotClient::UrlHelper
+      o.extend described_class
     end
   end
 
-  after(:each) do
-    CobotClient::UrlHelper.site = 'https://www.cobot.me'
+  after do
+    described_class.site = 'https://www.cobot.me'
   end
 
   it 'lets me change the site' do
-    CobotClient::UrlHelper.site = 'https://www.cobot.com'
+    described_class.site = 'https://www.cobot.com'
 
     expect(helper.cobot_url).to eql('https://www.cobot.com/')
   end

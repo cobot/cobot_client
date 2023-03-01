@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'oauth2'
 
 module CobotClient
@@ -16,7 +18,7 @@ module CobotClient
     #
     # Returns the links as `[CobotClient::NavigationLink]`
     def install_links(new_links)
-      existing_links = get_links
+      existing_links = fetch_links
       missing_links = new_links.reject do |new_link|
         existing_links.find do |existing_link|
           existing_link.section == new_link.section && existing_link.iframe_url == new_link.iframe_url
@@ -30,18 +32,21 @@ module CobotClient
 
     private
 
-    def get_links
+    def fetch_links
       @api_client.get(@subdomain, '/navigation_links').map do |attributes|
         NavigationLink.new attributes
       end
     end
 
     def create_link(link)
-      response = @api_client.post(@subdomain, '/navigation_links',
+      response = @api_client.post(
+        @subdomain,
+        '/navigation_links',
         section: link.section,
         label: link.label,
         iframe_url: link.iframe_url,
-        user_editable: link.user_editable)
+        user_editable: link.user_editable
+      )
 
       NavigationLink.new response
     end

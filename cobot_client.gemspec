@@ -12,15 +12,17 @@ Gem::Specification.new do |gem|
 
   gem.files         = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = 'cobot_client'
   gem.require_paths = ['lib']
   gem.version       = CobotClient::VERSION
 
-  gem.add_dependency 'virtus', '~>1.0'
+  gem.required_ruby_version = ['>=2.7', '<4']
+
+  gem.add_dependency 'json', '~>2.0'
   gem.add_dependency 'oauth2', '~>2.0'
   gem.add_dependency 'rest-client', '~>2.0.1'
-  gem.add_dependency 'json', '~>2.0'
-  gem.add_development_dependency 'rspec', '~>3.0'
+  gem.add_dependency 'virtus', '~>1.0'
   gem.add_development_dependency 'rake', '~>12.3.3'
+  gem.add_development_dependency 'rspec', '~>3.0'
+  gem.metadata['rubygems_mfa_required'] = 'true'
 end
