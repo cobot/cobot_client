@@ -75,32 +75,27 @@ module CobotClient
       begin
         yield
       rescue RestClient::BadGateway, SocketError, RestClient::RequestTimeout, CobotClient::InternalServerError => e
-        if retries < 3
-          sleep self.class.retry_time
-          retries += 1
-          retry
-        else
-          raise e
-        end
+        raise e unless retries < 3
+
+        sleep self.class.retry_time
+        retries += 1
+        retry
       end
     end
 
+    # Returns [url, subdomain, path, params]
     def parse_args(*args)
       params = if args.size == 3 || (args.size == 2 && args[0].match(%r{https?://}))
                  args.pop
                else
                  {}
                end
+
       if args.size == 1
-        url = args[0]
-        path = nil
-        subdomain = nil
+        [args[0], nil, nil, params]
       else
-        subdomain = args[0]
-        path = args[1]
-        url = nil
+        [nil, args[0], args[1], params]
       end
-      [url, subdomain, path, params]
     end
 
     def build_url(subdomain_or_url, path, params = {})
@@ -114,7 +109,7 @@ module CobotClient
     end
 
     def content_type_header
-      { 'Content-Type' => 'application/json' }
+      {'Content-Type' => 'application/json'}
     end
 
     def headers

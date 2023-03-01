@@ -1,17 +1,16 @@
+# frozen_string_literal: true
+
 require 'rest_client'
 
 module CobotClient
-  module Exceptions
-    EXCEPTIONS_MAP = {}
-  end
+  class Exception < RestClient::Exception; end
 
-  class Exception < RestClient::Exception
-  end
+  module Exceptions; end
 
-  RestClient::STATUSES.each_pair do |code, message|
+  Exceptions::EXCEPTIONS_MAP = RestClient::STATUSES.each_with_object({}) do |(code, message), hash|
     superclass = RestClient::Exceptions::EXCEPTIONS_MAP.fetch code
     klass = Class.new(superclass)
     klass_constant = const_set message.delete(' \-\''), klass
-    Exceptions::EXCEPTIONS_MAP[superclass] = klass_constant
+    hash[superclass] = klass_constant
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cobot_client/version'
 require 'cobot_client/engine' if defined?(Rails)
 require 'cobot_client/exceptions'
