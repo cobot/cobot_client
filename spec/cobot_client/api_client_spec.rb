@@ -14,9 +14,12 @@ describe CobotClient::ApiClient do
       expect(RestClient).to receive(:put).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
-        'Content-Type' => 'application/json',
+        {
+          'Content-Type' => 'application/json',
           'User-Agent' => 'test agent',
-          'Authorization' => 'Bearer token-123') { default_response }
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.put 'co-up', '/invoices', {id: '1'}
     end
@@ -25,9 +28,12 @@ describe CobotClient::ApiClient do
       expect(RestClient).to receive(:put).with(
         'https://co-up.cobot.me/api/invoices',
         [{id: '1'}].to_json,
-        'Content-Type' => 'application/json',
+        {
+          'Content-Type' => 'application/json',
           'User-Agent' => 'test agent',
-          'Authorization' => 'Bearer token-123') { default_response }
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.put 'co-up', '/invoices', [{id: '1'}]
     end
@@ -36,9 +42,12 @@ describe CobotClient::ApiClient do
       expect(RestClient).to receive(:put).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
-        'Content-Type' => 'application/json',
+        {
+          'Content-Type' => 'application/json',
           'User-Agent' => 'test agent',
-          'Authorization' => 'Bearer token-123') { default_response }
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.put 'https://co-up.cobot.me/api/invoices', {id: '1'}
     end
@@ -75,9 +84,12 @@ describe CobotClient::ApiClient do
       expect(RestClient).to receive(:patch).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
-        'Content-Type' => 'application/json',
+        {
+          'Content-Type' => 'application/json',
           'User-Agent' => 'test agent',
-          'Authorization' => 'Bearer token-123') { default_response }
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.patch 'co-up', '/invoices', {id: '1'}
     end
@@ -86,9 +98,12 @@ describe CobotClient::ApiClient do
       expect(RestClient).to receive(:patch).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
-        'Content-Type' => 'application/json',
+        {
+          'Content-Type' => 'application/json',
           'User-Agent' => 'test agent',
-          'Authorization' => 'Bearer token-123') { default_response }
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.patch 'https://co-up.cobot.me/api/invoices', {id: '1'}
     end
@@ -125,9 +140,12 @@ describe CobotClient::ApiClient do
       expect(RestClient).to receive(:post).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
-        'Content-Type' => 'application/json',
+        {
+          'Content-Type' => 'application/json',
           'User-Agent' => 'test agent',
-          'Authorization' => 'Bearer token-123') { default_response }
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.post 'co-up', '/invoices', {id: '1'}
     end
@@ -136,9 +154,12 @@ describe CobotClient::ApiClient do
       expect(RestClient).to receive(:post).with(
         'https://co-up.cobot.me/api/invoices',
         {id: '1'}.to_json,
-        'Content-Type' => 'application/json',
+        {
+          'Content-Type' => 'application/json',
           'User-Agent' => 'test agent',
-          'Authorization' => 'Bearer token-123') { default_response }
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.post 'https://co-up.cobot.me/api/invoices', {id: '1'}
     end
@@ -160,15 +181,25 @@ describe CobotClient::ApiClient do
 
   context '#get' do
     it 'calls rest client' do
-      expect(RestClient).to receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
-        'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
+      expect(RestClient).to receive(:get).with(
+        'https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
+        {
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.get 'co-up', '/invoices', {from: '2013-10-6', to: '2013-10-12'}
     end
 
     it 'accepts a url' do
-      expect(RestClient).to receive(:get).with('https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
-        'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
+      expect(RestClient).to receive(:get).with(
+        'https://co-up.cobot.me/api/invoices?from=2013-10-6&to=2013-10-12',
+        {
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.get 'https://co-up.cobot.me/api/invoices', {from: '2013-10-6', to: '2013-10-12'}
     end
@@ -230,7 +261,11 @@ describe CobotClient::ApiClient do
     it 'calls rest client' do
       expect(RestClient).to receive(:delete).with(
         'https://co-up.cobot.me/api/invoices/1',
-        'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
+        {
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.delete 'co-up', '/invoices/1'
     end
@@ -238,7 +273,11 @@ describe CobotClient::ApiClient do
     it 'accepts a url' do
       expect(RestClient).to receive(:delete).with(
         'https://co-up.cobot.me/api/invoices/1',
-        'User-Agent' => 'test agent', 'Authorization' => 'Bearer token-123') { default_response }
+        {
+          'User-Agent' => 'test agent',
+          'Authorization' => 'Bearer token-123'
+        }
+      ) { default_response }
 
       api_client.delete 'https://co-up.cobot.me/api/invoices/1'
     end
