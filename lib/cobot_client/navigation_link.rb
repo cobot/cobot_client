@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-require 'virtus'
-
 module CobotClient
   class NavigationLink
-    include Virtus.model
+    include ActiveModel::Model
+    include ActiveModel::Attributes
 
-    attribute :section, String
-    attribute :label, String
-    attribute :iframe_url, String
-    attribute :user_url, String
-    attribute :user_editable, Boolean, default: true
+    attribute :section, :string
+    attribute :label, :string
+    attribute :iframe_url, :string
+    attribute :user_url, :string
+    attribute :user_editable, :boolean, default: true
   end
 end
