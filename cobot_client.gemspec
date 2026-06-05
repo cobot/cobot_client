@@ -21,7 +21,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'activemodel', '>=5.2'
   gem.add_dependency 'json', '~>2.0'
   gem.add_dependency 'oauth2', '~>2.0'
-  gem.add_dependency 'rest-client', '~>2.0.1'
 
   gem.metadata['rubygems_mfa_required'] = 'true'
 end

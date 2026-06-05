@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'uri'
-
 module CobotClient
   module UrlHelper
     DEFAULT_SITE = 'https://www.cobot.me'
@@ -16,18 +14,19 @@ module CobotClient
       attr_writer :site
     end
 
-    # generates a url to access the cobot api
+    # generates a uri to access the cobot api
     # see the spec for usage examples
-    def cobot_url(subdomain = 'www', *path_options) # rubocop:todo Metrics/AbcSize
-      path = path_options.first.is_a?(String) ? path_options.first : '/'
-      options = path_options.find { |p| p.is_a?(Hash) } || {}
+    def cobot_uri(subdomain = 'www', path = '/', params: {}, **)
+      uri = URI.parse(CobotClient::UrlHelper.site)
+      uri.host = uri.host.split('.').tap { |parts| parts[0] = subdomain }.join('.')
+      uri.path = path
+      uri.query = URI.encode_www_form(params) unless params.empty?
 
-      url = URI.parse(CobotClient::UrlHelper.site)
-      url.host = url.host.split('.').tap { |parts| parts[0] = subdomain }.join('.')
-      url.path = path
-      url.query = URI.encode_www_form(options[:params]) if options[:params]&.any?
+      uri
+    end
 
-      url.to_s
+    def cobot_url(subdomain = 'www', path = '/', params: {}, **)
+      cobot_uri(subdomain, path, params: params, **).to_s
     end
   end
 end

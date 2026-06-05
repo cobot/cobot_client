@@ -9,6 +9,9 @@ AllCops:
 Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: no_space
 
+RSpec/AnyInstance:
+  Enabled: false
+
 RSpec/ExampleLength:
   Enabled: false
 
