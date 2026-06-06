@@ -17,22 +17,22 @@ module CobotClient
     end
 
     # args: either a full URL or subdomain, path, plus a body as hash
-    def post(*args)
-      request :post, *args
+    def post(*)
+      request(:post, *)
     end
 
     # args: either a full URL or subdomain, path, plus a body as hash
-    def put(*args)
-      request :put, *args
+    def put(*)
+      request(:put, *)
     end
 
-    def patch(*args)
-      request :patch, *args
+    def patch(*)
+      request(:patch, *)
     end
 
     # args: either a full URL or subdomain, path, plus an optional params hash
-    def get(*args)
-      url, subdomain, path, params = parse_args(*args)
+    def get(*)
+      url, subdomain, path, params = parse_args(*)
       JSON.parse(
         rewrap_errors do
           RestClient.get(
@@ -44,8 +44,8 @@ module CobotClient
     end
 
     # args: either a full URL or subdomain, path
-    def delete(*args)
-      url, subdomain, path, = parse_args(*args)
+    def delete(*)
+      url, subdomain, path, = parse_args(*)
       rewrap_errors do
         RestClient.delete(build_url(url || subdomain, path), headers)
       end
@@ -53,8 +53,8 @@ module CobotClient
 
     private
 
-    def request(method, *args)
-      url, subdomain, path, body = parse_args(*args)
+    def request(method, *)
+      url, subdomain, path, body = parse_args(*)
       rewrap_errors do
         response = RestClient.public_send(method,
                                           build_url(url || subdomain, path),
@@ -64,8 +64,8 @@ module CobotClient
       end
     end
 
-    def rewrap_errors(&block)
-      retry_errors(&block)
+    def rewrap_errors(&)
+      retry_errors(&)
     rescue RestClient::Exception => e
       raise CobotClient::Exceptions::EXCEPTIONS_MAP[e.class], e.response
     end

@@ -1,3 +1,7 @@
+# 6.0.0
+
+- Drop support for EOL Rubies (< 3.2)
+
 # 5.0.0
 
 Bump oauth2 dependency to ~>2.0.
