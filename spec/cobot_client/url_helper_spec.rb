@@ -23,7 +23,7 @@ describe CobotClient::UrlHelper do
     expect(helper.cobot_url).to eql('https://www.cobot.me/')
   end
 
-  it 'returns a url with a sudomain' do
+  it 'returns a url with a subdomain' do
     expect(helper.cobot_url('co-up')).to eql('https://co-up.cobot.me/')
   end
 

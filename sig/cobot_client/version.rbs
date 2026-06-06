@@ -1,0 +1,3 @@
+module CobotClient
+  VERSION: String
+end

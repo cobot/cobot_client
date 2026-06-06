@@ -1,0 +1,23 @@
+module CobotClient
+  class Error < StandardError
+  end
+
+  class ConnectionError < StandardError
+  end
+
+  class ResponseError < Error
+    HTTP_CODE: Integer?
+
+    def self.build: (String?, response: Response) -> ResponseError
+
+    attr_reader response: Response?
+
+    def initialize: (String?, ?response: Response?) -> void
+
+    def http_body: -> String?
+
+    def http_code: -> Integer?
+  end
+
+  RESPONSE_CODE_TO_ERROR_CLASS: Hash[Integer, singleton(ResponseError)]
+end

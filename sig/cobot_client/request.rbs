@@ -1,0 +1,39 @@
+module CobotClient
+  class Request
+    type verb = Symbol
+
+    CONTENT_TYPE_HEADER: ApiClient::headers
+    VERBS: Array[verb]
+
+    @http: Net::HTTP
+
+    attr_reader body: String?
+    attr_reader headers: ApiClient::headers
+    attr_reader uri: URI::Generic
+    attr_reader verb: verb
+
+    def initialize:
+      (verb, ApiClient::subdomain, ApiClient::path, ?ApiClient::request_payload) -> void |
+      (verb, ApiClient::url, ?ApiClient::request_payload) -> void
+
+    def headers=: (ApiClient::headers) -> ApiClient::headers
+
+    def submit: -> Response
+
+    private
+
+    def build_uri: (ApiClient::subdomain | ApiClient::url, ApiClient::path?, **untyped) -> URI::Generic
+
+    def http: -> Net::HTTP
+
+    def net_http_request: -> Net::HTTPRequest
+
+    def parse_args:
+      (ApiClient::url) -> [ApiClient::url, nil, nil, ApiClient::request_payload] |
+      (ApiClient::url, ApiClient::request_payload) -> [ApiClient::url, nil, nil, ApiClient::request_payload] |
+      (ApiClient::subdomain, ApiClient::path) -> [nil, ApiClient::subdomain, ApiClient::path, ApiClient::request_payload] |
+      (ApiClient::subdomain, ApiClient::path, ApiClient::request_payload) -> [nil, ApiClient::subdomain, ApiClient::path, ApiClient::request_payload]
+
+    def request_class: -> singleton(Net::HTTPRequest)
+  end
+end

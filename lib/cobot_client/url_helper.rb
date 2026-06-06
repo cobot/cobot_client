@@ -5,13 +5,12 @@ module CobotClient
     DEFAULT_SITE = 'https://www.cobot.me'
 
     # set this to override the site for accessing the cobot api
+    def self.site
+      @site || DEFAULT_SITE
+    end
 
-    class << self
-      def site
-        @site || DEFAULT_SITE
-      end
-
-      attr_writer :site
+    def self.site=(site)
+      @site = site
     end
 
     # generates a uri to access the cobot api

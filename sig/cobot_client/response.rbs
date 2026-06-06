@@ -1,0 +1,23 @@
+module CobotClient
+  class Response
+    @net_http_response: Net::HTTPResponse
+
+    def initialize: (Net::HTTPResponse) -> void
+
+    def body: -> String
+
+    def client_error?: -> bool
+
+    def code: -> Integer
+
+    def headers: -> ApiClient::headers
+
+    def parsed_body: -> ApiClient::parsed_response_body
+
+    def server_error?: -> bool
+
+    def success?: -> bool
+
+    def to_error: -> ResponseError?
+  end
+end

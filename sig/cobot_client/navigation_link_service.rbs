@@ -1,0 +1,17 @@
+module CobotClient
+  class NavigationLinkService
+    @api_client: ApiClient
+
+    @subdomain: String
+
+    def initialize: (ApiClient, String) -> void
+
+    def install_links: (Array[NavigationLink]) -> Array[NavigationLink]
+
+    private
+
+    def create_link: (NavigationLink) -> NavigationLink
+
+    def fetch_links: -> Array[NavigationLink]
+  end
+end

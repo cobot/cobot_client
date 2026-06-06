@@ -1,0 +1,51 @@
+module CobotClient
+  class ApiClient
+    type headers = Hash[String, String]
+    type path = String
+    type request_params = parsed_json_object
+    type request_payload = (request_params | Array[request_params])
+    type parsed_json_object = Hash[Symbol, untyped]
+    type parsed_response_body = (parsed_json_object | Array[parsed_json_object])?
+    type subdomain = String
+    type url = String
+
+    @access_token: String
+
+    attr_accessor self.retry_time: Integer
+    attr_accessor self.user_agent: String
+
+    def initialize: (String) -> void
+
+    def delete:
+      (subdomain, path) -> Response |
+      (url) -> Response
+
+    def get:
+      (subdomain, path, ?request_payload) -> parsed_response_body |
+      (url, ?request_payload) -> parsed_response_body
+
+    def patch:
+      (subdomain, path, ?request_payload) -> parsed_response_body |
+      (url, ?request_payload) -> parsed_response_body
+
+    def post:
+      (subdomain, path, ?request_payload) -> parsed_response_body |
+      (url, ?request_payload) -> parsed_response_body
+
+    def put:
+      (subdomain, path, ?request_payload) -> parsed_response_body |
+      (url, ?request_payload) -> parsed_response_body
+
+    private
+
+    def headers: -> headers
+
+    def request:
+      (Request::verb, subdomain, path, ?request_payload) -> Response |
+      (Request::verb, url, ?request_payload) -> Response
+
+    def retry_errors: [R] () { () -> R } -> R
+
+    def rewrap_errors: () { () -> Response } -> Response
+  end
+end

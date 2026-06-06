@@ -7,7 +7,9 @@ describe CobotClient::ApiClient do
   let(:default_response) { {status: 200, body: '{}'} }
 
   def cobot_client_response(code:, body: '')
-    net_http_response = instance_double(Net::HTTPResponse, code: code.to_s, body: body, message: nil)
+    net_http_response = Net::HTTPResponse.new('1.1', code.to_s, nil)
+    net_http_response.body = body
+    net_http_response.instance_variable_set(:@read, true)
 
     CobotClient::Response.new(net_http_response)
   end

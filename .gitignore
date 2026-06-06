@@ -16,3 +16,6 @@ test/tmp
 test/version_tmp
 tmp
 .rvmrc
+
+/.gem_rbs_collection/
+/rbs_collection.lock.yaml

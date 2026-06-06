@@ -1,0 +1,4 @@
+dependencies:
+  - name: json
+  - name: net/http
+  - name: uri

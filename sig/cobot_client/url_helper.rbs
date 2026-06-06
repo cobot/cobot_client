@@ -1,0 +1,25 @@
+module CobotClient
+  module UrlHelper
+    DEFAULT_SITE: String
+
+    self.@site: String
+
+    def self.site: -> String
+
+    def self.site=: (String) -> String
+
+    def cobot_uri:
+      () -> URI::Generic |
+      (ApiClient::subdomain) -> URI::Generic |
+      (ApiClient::subdomain, params: ApiClient::request_payload) -> URI::Generic |
+      (ApiClient::subdomain, ApiClient::path) -> URI::Generic |
+      (ApiClient::subdomain, ApiClient::path, params: ApiClient::request_payload) -> URI::Generic
+
+    def cobot_url:
+      () -> String |
+      (ApiClient::subdomain) -> String |
+      (ApiClient::subdomain, params: ApiClient::request_payload) -> String |
+      (ApiClient::subdomain, ApiClient::path) -> String |
+      (ApiClient::subdomain, ApiClient::path, params: ApiClient::request_payload) -> String
+  end
+end
