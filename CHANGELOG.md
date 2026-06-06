@@ -1,6 +1,6 @@
 # 6.0.0
 
-- Drop support for EOL Rubies (< 3.2)
+- Drop support for EOL Rubies (< 3.3)
 - Add support for Ruby v4
 - Replace discontinued `Virtus` with `ActiveModel::Attributes`
 
