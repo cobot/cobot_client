@@ -3,6 +3,7 @@
 - Drop support for EOL Rubies (< 3.3)
 - Add support for Ruby v4
 - Replace discontinued `Virtus` with `ActiveModel::Attributes`
+- Replace abandoned `rest-client` with `net/http`
 
 # 5.0.0
 
@@ -14,7 +15,7 @@ Bump oauth2 dependency to ~>2.0.
 
 # 3.1.0
 
-- adds user_edtiable attribute to navigation links
+- adds user_editable attribute to navigation links
 
 # 3.0.0
 

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'rest_client'
-require 'json'
-
 module CobotClient
   class ApiClient
     include UrlHelper
@@ -10,6 +7,7 @@ module CobotClient
     class << self
       attr_accessor :user_agent, :retry_time
     end
+
     self.retry_time = 1
 
     def initialize(access_token)
@@ -18,98 +16,58 @@ module CobotClient
 
     # args: either a full URL or subdomain, path, plus a body as hash
     def post(*)
-      request(:post, *)
+      request(:post, *).parsed_body
     end
 
     # args: either a full URL or subdomain, path, plus a body as hash
     def put(*)
-      request(:put, *)
+      request(:put, *).parsed_body
     end
 
     def patch(*)
-      request(:patch, *)
+      request(:patch, *).parsed_body
     end
 
     # args: either a full URL or subdomain, path, plus an optional params hash
     def get(*)
-      url, subdomain, path, params = parse_args(*)
-      JSON.parse(
-        rewrap_errors do
-          RestClient.get(
-            build_url(url || subdomain, path, params),
-            headers
-          ).body
-        end, symbolize_names: true
-      )
+      request(:get, *).parsed_body
     end
 
     # args: either a full URL or subdomain, path
     def delete(*)
-      url, subdomain, path, = parse_args(*)
-      rewrap_errors do
-        RestClient.delete(build_url(url || subdomain, path), headers)
-      end
+      request(:delete, *)
     end
 
     private
 
     def request(method, *)
-      url, subdomain, path, body = parse_args(*)
-      rewrap_errors do
-        response = RestClient.public_send(method,
-                                          build_url(url || subdomain, path),
-                                          body.to_json,
-                                          headers.merge(content_type_header))
-        JSON.parse response.body, symbolize_names: true unless response.code == 204
+      request = Request.new(method, *)
+      request.headers = headers
+
+      retry_errors do
+        request.submit
       end
     end
 
-    def rewrap_errors(&)
-      retry_errors(&)
-    rescue RestClient::Exception => e
-      raise CobotClient::Exceptions::EXCEPTIONS_MAP[e.class], e.response
+    def rewrap_errors
+      yield.tap do |response|
+        raise response.to_error if response.client_error? || response.server_error?
+      end
+    rescue Net::ProtocolError, SocketError, Timeout::Error => e
+      raise ConnectionError, "#{e.class}: #{e.message}"
     end
 
-    def retry_errors
+    def retry_errors(&)
       retries = 0
       begin
-        yield
-      rescue RestClient::BadGateway, SocketError, RestClient::RequestTimeout, CobotClient::InternalServerError => e
+        rewrap_errors(&)
+      rescue ConnectionError, BadGateway, InternalServerError => e
         raise e unless retries < 3
 
         sleep self.class.retry_time
         retries += 1
         retry
       end
-    end
-
-    # Returns [url, subdomain, path, params]
-    def parse_args(*args)
-      params = if args.size == 3 || (args.size == 2 && args[0].match(%r{https?://}))
-                 args.pop
-               else
-                 {}
-               end
-
-      if args.size == 1
-        [args[0], nil, nil, params]
-      else
-        [nil, args[0], args[1], params]
-      end
-    end
-
-    def build_url(subdomain_or_url, path, params = {})
-      if path
-        cobot_url(subdomain_or_url, "/api#{path}", params: params)
-      else
-        uri = URI.parse(subdomain_or_url)
-        uri.query = URI.encode_www_form(params) if params&.any?
-        uri.to_s
-      end
-    end
-
-    def content_type_header
-      {'Content-Type' => 'application/json'}
     end
 
     def headers
