@@ -4,24 +4,22 @@ require 'spec_helper'
 
 describe CobotClient::NavigationLinkService do
   let(:service) { described_class.new(api_client, 'co-up') }
-  let(:api_client) { instance_double(CobotClient::ApiClient) }
+  let(:api_client) { CobotClient::ApiClient.new('access_token') }
 
   context 'when there are links already' do
     let(:existing_link) do
-      instance_double(
-        CobotClient::NavigationLink,
+      CobotClient::NavigationLink.new(
         label: 'existing link',
         section: 'admin/setup',
         iframe_url: 'http://example.com/1'
-      ).as_null_object
+      )
     end
     let(:new_link) do
-      instance_double(
-        CobotClient::NavigationLink,
+      CobotClient::NavigationLink.new(
         label: 'new link',
         section: 'admin/setup',
         iframe_url: 'http://example.com/2'
-      ).as_null_object
+      )
     end
 
     before do
@@ -62,9 +60,12 @@ describe CobotClient::NavigationLinkService do
 
   context 'when there are no links installed' do
     let(:link) do
-      instance_double(CobotClient::NavigationLink,
-                      section: 'admin/manage', label: 'test link', iframe_url: '/test',
-                      user_editable: true)
+      CobotClient::NavigationLink.new(
+        section: 'admin/manage',
+        label: 'test link',
+        iframe_url: '/test',
+        user_editable: true
+      )
     end
 
     before do

@@ -7,9 +7,9 @@ module CobotClient
   class NavigationLinkService
     # api_client - an CobotClient::ApiClient
     # access_token - an access token string (owner must be admin of the space to be used)
-    def initialize(api_client, space_sudomain)
+    def initialize(api_client, space_subdomain)
       @api_client = api_client
-      @subdomain = space_sudomain
+      @subdomain = space_subdomain
     end
 
     # Checks if links are already installed and if not installs them.

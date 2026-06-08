@@ -1,0 +1,11 @@
+module CobotClient
+  class NavigationLink
+    attr_accessor section: String
+    attr_accessor label: String
+    attr_accessor iframe_url: String
+    attr_accessor user_url: String
+    attr_accessor user_editable: bool
+
+    def initialize: (Hash[Symbol, untyped]) -> void
+  end
+end

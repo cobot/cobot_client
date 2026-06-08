@@ -2,6 +2,7 @@
 
 - Drop support for EOL Rubies (< 3.3)
 - Add support for Ruby v4
+- Add RBS type declarations
 - Replace discontinued `Virtus` with `ActiveModel::Attributes`
 - Replace abandoned `rest-client` with `net/http`
 
