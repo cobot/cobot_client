@@ -22,6 +22,8 @@ module CobotClient
       return if !success? || code == 204
 
       JSON.parse(@net_http_response.body, symbolize_names: true)
+    rescue JSON::ParserError => e
+      raise MalformedResponseBody.new("#{e.class}: #{e.message}", response: self)
     end
 
     def client_error?
