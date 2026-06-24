@@ -278,13 +278,27 @@ describe CobotClient::ApiClient do
       error = response.to_error
       allow_any_instance_of(CobotClient::Request).to receive(:submit).and_raise(error)
 
-      begin
-        api_client.get('co-up', '/invoices')
-      rescue CobotClient::ResponseError => e
-        expect(e).to be_a(CobotClient::NotFound)
-        expect(e.response).to eql(response)
-        expect(e.http_code).to be(404)
-        expect(e.http_body).to eql('boom')
+      expect { api_client.get('co-up', '/invoices') }.to raise_error(CobotClient::NotFound) do |e|
+        expect(e).to be_a(CobotClient::Error)
+        expect(e).to be_a(CobotClient::ResponseError)
+        expect(e.response).to eq(response)
+        expect(e.http_code).to eq(404)
+        expect(e.http_body).to eq('boom')
+      end
+    end
+
+    it 'raises a MalformedResponseBody error when the response body is not valid JSON' do
+      stub_request(:get, 'https://co-up.cobot.me/api/invoices')
+        .to_return(status: 200, body: '<invoices></invoices>')
+
+      expect { api_client.get('co-up', '/invoices') }.to raise_error(CobotClient::MalformedResponseBody) do |e|
+        expect(e).to be_a(CobotClient::Error)
+        expect(e).to be_a(CobotClient::ResponseError)
+        expect(e.http_code).to eq(200)
+        expect(e.http_body).to eq('<invoices></invoices>')
+        expect(e.message).to eq(<<~MESSAGE.chomp)
+          HTTP 200 - JSON::ParserError: unexpected character: '<invoices></invoices>' at line 1 column 1
+        MESSAGE
       end
     end
   end

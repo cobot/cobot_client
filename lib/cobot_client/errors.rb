@@ -44,4 +44,6 @@ module CobotClient
 
     [code.to_i, const_set(class_name, class_object)]
   end
+
+  class MalformedResponseBody < ResponseError; end
 end
