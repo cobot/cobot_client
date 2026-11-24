@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = ['>=3.3', '<5']
 
   gem.add_dependency 'activemodel', '>=5.2'
-  gem.add_dependency 'json', '~>2.0'
+  gem.add_dependency 'json', '>=2.0', '<4'
   gem.add_dependency 'oauth2', '~>2.0'
 
   gem.metadata['rubygems_mfa_required'] = 'true'
