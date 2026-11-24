@@ -1,3 +1,7 @@
+# 6.0.1
+
+- Allow `json` v2 and v3
+
 # 6.0.0
 
 - Drop support for EOL Rubies (< 3.3)
